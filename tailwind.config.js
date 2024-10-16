@@ -14,6 +14,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['"Lato"', 'sans-serif'],
+                satisfy: ['"Satisfy"', 'cursive'],
             },
             borderRadius: {
                 lg: 'var(--radius)',
