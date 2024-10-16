@@ -1,19 +1,24 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import BaseLayout from '@/Layouts/BaseLayout';
+import { useForm } from '@inertiajs/react';
+
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { FormEventHandler } from 'react';
 
-export default function Login({
-    status,
-    canResetPassword,
-}: {
-    status?: string;
-    canResetPassword: boolean;
-}) {
+import { InputWrapper } from '@/components/ui/input-wrapper';
+import { CheckedState } from '@radix-ui/react-checkbox';
+import { LoaderCircle } from 'lucide-react';
+
+export default function Login() {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -24,84 +29,91 @@ export default function Login({
         e.preventDefault();
 
         post(route('login'), {
-            onFinish: () => reset('password'),
+            onFinish: () => {
+                reset('password');
+            },
         });
     };
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
+        <BaseLayout>
+            <div className="flex h-full w-full items-center justify-center">
+                <form onSubmit={submit}>
+                    <Card className="w-[350px]">
+                        <CardHeader>
+                            <CardTitle>Login</CardTitle>
+                            <CardDescription className="text-balance">
+                                Please enter your credentials to log in to 'Not
+                                Instagram'
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid w-full items-center gap-4">
+                                <InputWrapper
+                                    label="Email"
+                                    inputFor="email"
+                                    error={errors.email}
+                                >
+                                    <Input
+                                        id="email"
+                                        placeholder="Please enter email"
+                                        value={data.email}
+                                        onChange={(e) =>
+                                            setData('email', e.target.value)
+                                        }
+                                    />
+                                </InputWrapper>
 
-            {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
+                                <InputWrapper
+                                    label="Password"
+                                    inputFor="password"
+                                    error={errors.password}
+                                >
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        placeholder="Please enter password"
+                                        value={data.password}
+                                        onChange={(e) =>
+                                            setData('password', e.target.value)
+                                        }
+                                    />
+                                </InputWrapper>
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4 block">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
-                        />
-                        <span className="ms-2 text-sm text-gray-600">
-                            Remember me
-                        </span>
-                    </label>
-                </div>
-
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
-                </div>
-            </form>
-        </GuestLayout>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        name="remember"
+                                        id="remember"
+                                        checked={data.remember}
+                                        onCheckedChange={(
+                                            checked: CheckedState,
+                                        ) =>
+                                            setData(
+                                                'remember',
+                                                Boolean(checked),
+                                            )
+                                        }
+                                    />
+                                    <label
+                                        htmlFor="remember"
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                        Remember Me
+                                    </label>
+                                </div>
+                            </div>
+                        </CardContent>
+                        <CardFooter className="flex justify-between">
+                            <Button type="submit" disabled={processing}>
+                                {processing && (
+                                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                                )}
+                                {processing ? 'Logging In' : 'Log In'}
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </form>
+            </div>
+        </BaseLayout>
     );
 }

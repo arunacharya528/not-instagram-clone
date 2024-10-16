@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { HomeIcon, LogInIcon, MenuIcon } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { HomeIcon, LogInIcon } from 'lucide-react';
 import React from 'react';
 
 function Navigation() {
@@ -26,7 +26,7 @@ export default function BaseLayout({
         <div className="flex h-svh flex-col overflow-clip">
             <div className="flex items-center p-5">
                 <div className="flex-none space-x-2 lg:w-72 lg:space-x-0">
-                    <Sheet>
+                    {/* <Sheet>
                         <SheetTrigger>
                             <Button
                                 variant="outline"
@@ -39,7 +39,7 @@ export default function BaseLayout({
                         <SheetContent side="left">
                             <Navigation />
                         </SheetContent>
-                    </Sheet>
+                    </Sheet> */}
                     <span className="font-satisfy text-xl md:text-3xl">
                         Not Instagram
                     </span>
@@ -55,8 +55,10 @@ export default function BaseLayout({
                     </div>
 
                     <div className="flex w-1/2 justify-end">
-                        <Button>
-                            <LogInIcon className="mr-2 h-4 w-4" /> Login
+                        <Button asChild>
+                            <Link href={route('login')} target="_blank">
+                                <LogInIcon className="mr-2 h-4 w-4" /> Login
+                            </Link>
                         </Button>
                     </div>
                 </div>
