@@ -1,17 +1,28 @@
 import { Button } from '@/components/ui/button';
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { Link } from '@inertiajs/react';
-import { HomeIcon, LogInIcon } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Link, usePage } from '@inertiajs/react';
+import { CircleUserRound, HomeIcon, LogInIcon, MenuIcon } from 'lucide-react';
 import React from 'react';
 
 function Navigation() {
     return (
         <div className="flex-col-space-y-5 flex">
             <Button
+                asChild
                 variant="ghost"
                 className="gap-3 rounded-full px-4 py-6 text-lg font-semibold"
             >
-                <HomeIcon /> Home
+                <Link href={route('home')}>
+                    <HomeIcon /> Home
+                </Link>
             </Button>
         </div>
     );
@@ -19,15 +30,19 @@ function Navigation() {
 
 export default function BaseLayout({
     children,
+    title,
 }: {
     children?: React.ReactElement;
+    title?: string;
 }) {
+    const { auth } = usePage().props;
+
     return (
         <div className="flex h-svh flex-col overflow-clip">
             <div className="flex items-center p-5">
                 <div className="flex-none space-x-2 lg:w-72 lg:space-x-0">
-                    {/* <Sheet>
-                        <SheetTrigger>
+                    <Sheet aria-describedby="Navigation sidebar for mobile">
+                        <SheetTrigger asChild>
                             <Button
                                 variant="outline"
                                 size="icon"
@@ -36,10 +51,10 @@ export default function BaseLayout({
                                 <MenuIcon className="h-4 w-4" />
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="left">
+                        <SheetContent side="left" content="navigation sidebar">
                             <Navigation />
                         </SheetContent>
-                    </Sheet> */}
+                    </Sheet>
                     <span className="font-satisfy text-xl md:text-3xl">
                         Not Instagram
                     </span>
@@ -55,11 +70,38 @@ export default function BaseLayout({
                     </div>
 
                     <div className="flex w-1/2 justify-end">
-                        <Button asChild>
-                            <Link href={route('login')} target="_blank">
-                                <LogInIcon className="mr-2 h-4 w-4" /> Login
-                            </Link>
-                        </Button>
+                        {auth.user ? (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button>
+                                        <CircleUserRound className="mr-2 h-4 w-4" />
+                                        {auth.user.name}
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <DropdownMenuItem>
+                                        <Link href={route('profile.edit')}>
+                                            Profile
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Link
+                                            href={route('logout')}
+                                            method="post"
+                                            as="button"
+                                        >
+                                            Logout
+                                        </Link>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        ) : (
+                            <Button asChild>
+                                <Link href={route('login')}>
+                                    <LogInIcon className="mr-2 h-4 w-4" /> Login
+                                </Link>
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -67,7 +109,16 @@ export default function BaseLayout({
                 <div className="hidden w-72 flex-none p-5 lg:block">
                     <Navigation />
                 </div>
-                <div className="h-full grow overflow-auto">{children}</div>
+                <div className="h-full grow overflow-auto">
+                    <div className="mx-auto h-full md:w-2/3 lg:w-1/2">
+                        {Boolean(title) && (
+                            <h2 className="sticky top-0 z-10 bg-white px-2 py-5 text-2xl font-semibold tracking-tight ring-2 ring-white transition-colors first:mt-0">
+                                {title}
+                            </h2>
+                        )}
+                        {children}
+                    </div>
+                </div>
             </div>
         </div>
     );
