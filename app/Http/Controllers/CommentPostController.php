@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class CommentPostController extends Controller
 {
+    public function index(Post $post)
+    {
+        return $post->comments()->with('platformUser.user')->latest()->get();
+    }
+
     public function store(Request $request, Post $post)
     {
         $request->validate([

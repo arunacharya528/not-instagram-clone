@@ -11,6 +11,7 @@ import {
 } from '../ui/carousel';
 import { CreateComment } from './CreateComment';
 import { LikePost } from './LikePost';
+import { ListComments } from './ListComments';
 
 export function Card({ post }: { post: Post }) {
     return (
@@ -88,9 +89,21 @@ export function Card({ post }: { post: Post }) {
                 )}
                 <div className="space-y-1 py-3 font-semibold">
                     <div className="text-sm">{post.likes_count} likes</div>
-                    <div className="text-xs text-gray-500">
-                        View All Comments
-                    </div>
+
+                    {Boolean(post.comments_count) && (
+                        <ListComments post={post}>
+                            <>
+                                {/* {Boolean(post.comments_count) > 0 ? ( */}
+                                <div className="text-xs text-gray-500">
+                                    View All {post.comments_count} comments
+                                </div>
+                                {/* ) : (
+                                ''
+                            )} */}
+                            </>
+                        </ListComments>
+                    )}
+
                     <div className="text-xs text-gray-500">
                         {formatDistanceToNow(new Date(post.created_at), {
                             addSuffix: true,

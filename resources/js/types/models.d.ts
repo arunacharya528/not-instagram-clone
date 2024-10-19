@@ -8,6 +8,7 @@ export interface Post {
     platform_user?: PlatformUser;
     images?: null | string[];
     likes_count?: number;
+    comments_count?: number;
     is_liked_by_me?: boolean;
 }
 
@@ -26,4 +27,13 @@ export interface User {
     email_verified_at: string;
     created_at: string;
     updated_at: string;
+}
+
+export interface Comment {
+    id: number;
+    platform_user_id: number;
+    content: string;
+    created_at: string;
+    updated_at: string;
+    platform_user?: PlatformUser;
 }
