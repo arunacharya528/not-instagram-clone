@@ -1,4 +1,5 @@
 import { Post } from '@/types/models';
+import { formatDistanceToNow } from 'date-fns';
 import {
     Bookmark,
     EllipsisVertical,
@@ -94,7 +95,11 @@ export function Card({ post }: { post: Post }) {
                     <div className="text-xs text-gray-500">
                         View All Comments
                     </div>
-                    <div className="text-xs text-gray-500">2 days ago</div>
+                    <div className="text-xs text-gray-500">
+                        {formatDistanceToNow(new Date(post.created_at), {
+                            addSuffix: true,
+                        })}
+                    </div>
                 </div>
             </div>
         </div>
