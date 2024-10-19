@@ -8,21 +8,29 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Toaster } from '@/components/ui/sonner';
+import { cn } from '@/lib/utils';
 import { Link, usePage } from '@inertiajs/react';
-import {
-    CircleUserRound,
-    HomeIcon,
-    LogInIcon,
-    MenuIcon,
-    PencilLine,
-} from 'lucide-react';
+import { CircleUserRound, HomeIcon, LogInIcon, PencilLine } from 'lucide-react';
 import React from 'react';
+
+function Logo({ className }: { className?: string }) {
+    return (
+        <Link
+            href={route('home')}
+            className={cn('mx-auto mb-5 font-satisfy text-3xl ' + className)}
+        >
+            Not Instagram
+        </Link>
+    );
+}
 
 function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
     return (
-        <div className="space-y-2">
+        <div className="w-64 space-y-2 p-5">
+            <div className="flex justify-center">
+                <Logo />
+            </div>
+
             <div>
                 <Button
                     asChild
@@ -36,7 +44,13 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
             </div>
 
             {isLoggedIn ? (
-                <CreatePost />
+                <CreatePost
+                    trigger={
+                        <Button className="w-full gap-3 rounded-full px-10 py-6 text-lg font-semibold">
+                            <PencilLine /> Post
+                        </Button>
+                    }
+                />
             ) : (
                 <Button
                     className="w-full gap-3 rounded-full px-10 py-6 text-lg font-semibold"
@@ -51,6 +65,60 @@ function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
     );
 }
 
+function ProfileDropdown({ trigger }: { trigger: React.ReactElement }) {
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+            <DropdownMenuContent>
+                <DropdownMenuItem>
+                    <Link href={route('profile.edit')}>Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link href={route('logout')} method="post" as="button">
+                        Logout
+                    </Link>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
+
+function BottomNavigation({ isLoggedIn }: { isLoggedIn: boolean }) {
+    return (
+        <div className="flex justify-evenly shadow-md">
+            <Button asChild variant="ghost" className="rounded-none p-6">
+                <Link href={route('home')}>
+                    <HomeIcon />
+                </Link>
+            </Button>
+
+            {isLoggedIn ? (
+                <CreatePost
+                    trigger={
+                        <Button variant="ghost" className="rounded-none p-6">
+                            <PencilLine />
+                        </Button>
+                    }
+                />
+            ) : (
+                <Button variant="ghost" className="rounded-none p-6" asChild>
+                    <Link href={route('login')}>
+                        <PencilLine />
+                    </Link>
+                </Button>
+            )}
+
+            <ProfileDropdown
+                trigger={
+                    <Button variant="ghost" className="rounded-none p-6">
+                        <CircleUserRound />
+                    </Button>
+                }
+            />
+        </div>
+    );
+}
+
 export default function BaseLayout({
     children,
     title,
@@ -61,66 +129,41 @@ export default function BaseLayout({
     const { auth } = usePage().props;
 
     return (
-        <div className="flex h-svh flex-col overflow-clip">
-            <div className="flex items-center p-5">
-                <div className="flex-none space-x-2 lg:w-72 lg:space-x-0">
-                    <Sheet aria-describedby="Navigation sidebar for mobile">
-                        <SheetTrigger asChild>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="lg:hidden"
-                            >
-                                <MenuIcon className="h-4 w-4" />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="left" content="navigation sidebar">
-                            <Navigation isLoggedIn={Boolean(auth.user)} />
-                        </SheetContent>
-                    </Sheet>
-                    <Link
-                        href={route('home')}
-                        className="font-satisfy text-xl md:text-3xl"
-                    >
-                        Not Instagram
-                    </Link>
+        <>
+            <div className="inline-flex h-svh w-full grow items-center overflow-clip">
+                <div className="hidden h-full w-1/2 justify-start lg:block">
+                    <Navigation isLoggedIn={Boolean(auth.user)} />
                 </div>
-                <div className="inline-flex grow items-center">
-                    <div className="w-1/2 justify-start"></div>
-                    <div className="hidden flex-shrink grow lg:block">
+                <div className="flex h-full w-1/2 flex-none flex-shrink grow flex-col overflow-y-auto">
+                    <div className="flex flex-col border-b py-5 lg:items-center lg:justify-center lg:border-none">
+                        <Logo className="mx-5 mb-0 lg:hidden" />
                         <Input
-                            type="email"
                             placeholder="Search"
-                            className="w-64"
+                            className="hidden w-64 lg:block"
                         />
                     </div>
+                    {Boolean(title) && (
+                        <h2 className="sticky top-0 z-10 bg-white p-5 text-2xl font-semibold tracking-tight ring-2 ring-white transition-colors first:mt-0">
+                            {title}
+                        </h2>
+                    )}
+                    <div className="grow overflow-y-auto p-1">{children}</div>
+                    <div className="flex-none border-t lg:hidden">
+                        <BottomNavigation isLoggedIn={Boolean(auth.user)} />
+                    </div>
+                </div>
 
-                    <div className="flex w-1/2 justify-end">
+                <div className="hidden h-full w-1/2 justify-end lg:flex">
+                    <div className="flex justify-end p-5">
                         {auth.user ? (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
+                            <ProfileDropdown
+                                trigger={
                                     <Button>
                                         <CircleUserRound className="mr-2 h-4 w-4" />
                                         {auth.user.name}
                                     </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem>
-                                        <Link href={route('profile.edit')}>
-                                            Profile
-                                        </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <Link
-                                            href={route('logout')}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Logout
-                                        </Link>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                                }
+                            />
                         ) : (
                             <Button asChild>
                                 <Link href={route('login')}>
@@ -131,22 +174,6 @@ export default function BaseLayout({
                     </div>
                 </div>
             </div>
-            <div className="flex grow overflow-y-auto">
-                <div className="hidden w-72 flex-none p-5 lg:block">
-                    <Navigation isLoggedIn={Boolean(auth.user)} />
-                </div>
-                <div className="h-full grow overflow-auto">
-                    <div className="mx-auto h-full md:w-2/3 lg:w-1/2">
-                        {Boolean(title) && (
-                            <h2 className="sticky top-0 z-10 bg-white px-2 py-5 text-2xl font-semibold tracking-tight ring-2 ring-white transition-colors first:mt-0">
-                                {title}
-                            </h2>
-                        )}
-                        {children}
-                    </div>
-                </div>
-            </div>
-            <Toaster />
-        </div>
+        </>
     );
 }

@@ -39,7 +39,7 @@ class Post extends Model
         $allLikers = $this->likes()->pluck('platform_user_id');
 
         return Attribute::make(
-            get: fn (): bool => $allLikers->contains(request()->user()->platformUser->id),
+            get: fn (): bool => $allLikers->contains(request()->user()?->platformUser?->id),
         );
     }
 

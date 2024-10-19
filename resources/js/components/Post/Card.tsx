@@ -61,7 +61,7 @@ export function Card({ post }: { post: Post }) {
                 ))}
 
             {!post.images?.length && (
-                <div className="space-y-1 p-2 font-semibold">
+                <div className="space-y-1 px-2 font-semibold">
                     <div className="text-sm">{post.title}</div>
                     <div className="text-xs">{post.content}</div>
                 </div>

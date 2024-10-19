@@ -48,23 +48,28 @@ export function CreateComment({ post: post_content }: { post: Post }) {
                 <form onSubmit={submit}>
                     <DialogHeader>
                         <DialogTitle>Add Comment</DialogTitle>
-                        <DialogDescription>
-                            <CondensedCard post={post_content} />
-                            <div className="grid gap-4 py-4">
-                                <InputWrapper
-                                    inputFor="content"
-                                    error={errors.content}
-                                >
-                                    <Textarea
-                                        id="content"
-                                        placeholder="Write your comment"
-                                        value={data.content}
-                                        rows={3}
-                                        onChange={(e) =>
-                                            setData('content', e.target.value)
-                                        }
-                                    />
-                                </InputWrapper>
+                        <DialogDescription className="text-left" asChild>
+                            <div>
+                                <CondensedCard post={post_content} />
+                                <div className="grid gap-4 py-4">
+                                    <InputWrapper
+                                        inputFor="content"
+                                        error={errors.content}
+                                    >
+                                        <Textarea
+                                            id="content"
+                                            placeholder="Write your comment"
+                                            value={data.content}
+                                            rows={3}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'content',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </InputWrapper>
+                                </div>
                             </div>
                         </DialogDescription>
                     </DialogHeader>

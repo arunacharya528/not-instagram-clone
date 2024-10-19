@@ -1,7 +1,7 @@
 import { useForm } from '@inertiajs/react';
 import { DialogTrigger } from '@radix-ui/react-dialog';
-import { LoaderCircle, PencilLine } from 'lucide-react';
-import { FormEventHandler, useState } from 'react';
+import { LoaderCircle } from 'lucide-react';
+import React, { FormEventHandler, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import {
@@ -14,7 +14,7 @@ import {
 import { InputWrapper } from '../ui/input-wrapper';
 import { Textarea } from '../ui/textarea';
 
-export function CreatePost() {
+export function CreatePost({ trigger }: { trigger: React.ReactElement }) {
     const [modalIsOpen, toggleModalState] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -36,12 +36,8 @@ export function CreatePost() {
     };
     return (
         <Dialog open={modalIsOpen} onOpenChange={toggleModalState}>
-            <DialogTrigger asChild>
-                <Button className="w-full gap-3 rounded-full px-10 py-6 text-lg font-semibold">
-                    <PencilLine /> Post
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="w-11/12 md:w-full">
+            <DialogTrigger asChild>{trigger}</DialogTrigger>
+            <DialogContent>
                 <form onSubmit={submit}>
                     <DialogHeader>
                         <DialogTitle>Create Post</DialogTitle>
