@@ -1,6 +1,5 @@
 import { Post } from '@/types/models';
 import { formatDistanceToNow } from 'date-fns';
-import { Bookmark, EllipsisVertical, Send } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
     Carousel,
@@ -9,10 +8,8 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '../ui/carousel';
-import { CreateComment } from './CreateComment';
-import { LikePost } from './LikePost';
 
-export function Card({ post }: { post: Post }) {
+export function CondensedCard({ post }: { post: Post }) {
     return (
         <div className="">
             <div className="flex items-center justify-between px-2 py-3">
@@ -27,10 +24,6 @@ export function Card({ post }: { post: Post }) {
                     <span className="text-sm font-semibold">
                         {post.platform_user?.user?.name}
                     </span>
-                </div>
-
-                <div className="flex space-x-2">
-                    <EllipsisVertical />
                 </div>
             </div>
 
@@ -66,20 +59,7 @@ export function Card({ post }: { post: Post }) {
                 </div>
             )}
 
-            <div className="px-2 py-3">
-                <div className="flex items-center justify-between">
-                    <div className="flex space-x-3">
-                        <LikePost post={post} />
-
-                        <CreateComment post={post} />
-
-                        <Send className="size-7" />
-                    </div>
-
-                    <div>
-                        <Bookmark className="size-7" />
-                    </div>
-                </div>
+            <div className="px-2">
                 {Boolean(post.images?.length) && (
                     <div className="space-y-1 py-2 font-semibold">
                         <div className="text-sm">{post.title}</div>
@@ -88,9 +68,6 @@ export function Card({ post }: { post: Post }) {
                 )}
                 <div className="space-y-1 py-3 font-semibold">
                     <div className="text-sm">{post.likes_count} likes</div>
-                    <div className="text-xs text-gray-500">
-                        View All Comments
-                    </div>
                     <div className="text-xs text-gray-500">
                         {formatDistanceToNow(new Date(post.created_at), {
                             addSuffix: true,
