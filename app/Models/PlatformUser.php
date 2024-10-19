@@ -17,4 +17,9 @@ class PlatformUser extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function likedPosts()
+    {
+        return $this->hasMany(PostLike::class);
+    }
 }

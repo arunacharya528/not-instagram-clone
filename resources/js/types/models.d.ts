@@ -7,6 +7,8 @@ export interface Post {
     updated_at: string;
     platform_user?: PlatformUser;
     images?: null | string[];
+    likes_count?: number;
+    is_liked_by_me?: boolean;
 }
 
 export interface PlatformUser {

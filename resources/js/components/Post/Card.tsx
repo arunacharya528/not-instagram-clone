@@ -1,12 +1,6 @@
 import { Post } from '@/types/models';
 import { formatDistanceToNow } from 'date-fns';
-import {
-    Bookmark,
-    EllipsisVertical,
-    Heart,
-    MessageCircle,
-    Send,
-} from 'lucide-react';
+import { Bookmark, EllipsisVertical, MessageCircle, Send } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
     Carousel,
@@ -15,6 +9,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '../ui/carousel';
+import { LikePost } from './LikePost';
 
 export function Card({ post }: { post: Post }) {
     return (
@@ -73,7 +68,7 @@ export function Card({ post }: { post: Post }) {
             <div className="px-2 py-3">
                 <div className="flex items-center justify-between">
                     <div className="flex space-x-3">
-                        <Heart className="size-7" />
+                        <LikePost post={post} />
 
                         <MessageCircle className="size-7" />
 
@@ -91,7 +86,7 @@ export function Card({ post }: { post: Post }) {
                     </div>
                 )}
                 <div className="space-y-1 py-3 font-semibold">
-                    <div className="text-sm">123456 likes</div>
+                    <div className="text-sm">{post.likes_count} likes</div>
                     <div className="text-xs text-gray-500">
                         View All Comments
                     </div>
