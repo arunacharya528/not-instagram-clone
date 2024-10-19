@@ -10,7 +10,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Link, usePage } from '@inertiajs/react';
-import { CircleUserRound, HomeIcon, LogInIcon, PencilLine } from 'lucide-react';
+import {
+    CircleUserRound,
+    HomeIcon,
+    LogInIcon,
+    PencilLine,
+    UserRoundCheck,
+} from 'lucide-react';
 import React from 'react';
 
 function Logo({ className }: { className?: string }) {
@@ -108,13 +114,21 @@ function BottomNavigation({ isLoggedIn }: { isLoggedIn: boolean }) {
                 </Button>
             )}
 
-            <ProfileDropdown
-                trigger={
-                    <Button variant="ghost" className="rounded-none p-6">
+            {isLoggedIn ? (
+                <ProfileDropdown
+                    trigger={
+                        <Button variant="ghost" className="rounded-none p-6">
+                            <CircleUserRound />
+                        </Button>
+                    }
+                />
+            ) : (
+                <Button variant="ghost" className="rounded-none p-6" asChild>
+                    <Link href={route('login')}>
                         <CircleUserRound />
-                    </Button>
-                }
-            />
+                    </Link>
+                </Button>
+            )}
         </div>
     );
 }
@@ -165,11 +179,24 @@ export default function BaseLayout({
                                 }
                             />
                         ) : (
-                            <Button asChild>
-                                <Link href={route('login')}>
-                                    <LogInIcon className="mr-2 h-4 w-4" /> Login
-                                </Link>
-                            </Button>
+                            <>
+                                <Button asChild>
+                                    <Link href={route('login')}>
+                                        <LogInIcon className="mr-2 h-4 w-4" />{' '}
+                                        Login
+                                    </Link>
+                                </Button>
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    className="ml-2"
+                                >
+                                    <Link href={route('register')}>
+                                        <UserRoundCheck className="mr-2 h-4 w-4" />{' '}
+                                        Register
+                                    </Link>
+                                </Button>
+                            </>
                         )}
                     </div>
                 </div>

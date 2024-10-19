@@ -1,5 +1,5 @@
 import BaseLayout from '@/Layouts/BaseLayout';
-import { useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -109,6 +109,9 @@ export default function Login() {
                                     <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
                                 )}
                                 {processing ? 'Logging In' : 'Log In'}
+                            </Button>
+                            <Button type="submit" variant="outline" asChild>
+                                <Link href={route('register')}>Register</Link>
                             </Button>
                         </CardFooter>
                     </Card>
