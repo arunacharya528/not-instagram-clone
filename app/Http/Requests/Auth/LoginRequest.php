@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class LoginRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return User::where('email', request('email'))->firstOrFail()?->isPlatformUser();
     }
 
     /**
@@ -48,6 +49,11 @@ class LoginRequest extends FormRequest
                 'email' => trans('auth.failed'),
             ]);
         }
+
+        // if (!request()->user()->isPlatformUser()) {
+        //     Auth::guard('web')->logout();
+
+        // }
 
         RateLimiter::clear($this->throttleKey());
     }

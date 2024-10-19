@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
-        $posts = Post::with('platformUser.user')->get();
+        $posts = Post::with('platformUser.user')->latest()->get();
 
         return Inertia::render('Home', compact('posts'));
     }

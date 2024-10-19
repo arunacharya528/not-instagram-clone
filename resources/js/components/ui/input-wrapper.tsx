@@ -8,12 +8,12 @@ export function InputWrapper({
 }: {
     inputFor: string;
     error?: string;
-    label: string;
+    label?: string;
     children: React.ReactElement;
 }) {
     return (
         <div className="flex flex-col space-y-1.5">
-            <Label htmlFor={inputFor}>{label}</Label>
+            {Boolean(label) && <Label htmlFor={inputFor}>{label}</Label>}
             {children}
             {Boolean(error) && (
                 <p className={'text-xs font-semibold text-red-600'}>{error}</p>

@@ -1,3 +1,4 @@
+import { CreatePost } from '@/components/Post/CreatePost';
 import { Button } from '@/components/ui/button';
 
 import {
@@ -8,22 +9,44 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Toaster } from '@/components/ui/sonner';
 import { Link, usePage } from '@inertiajs/react';
-import { CircleUserRound, HomeIcon, LogInIcon, MenuIcon } from 'lucide-react';
+import {
+    CircleUserRound,
+    HomeIcon,
+    LogInIcon,
+    MenuIcon,
+    PencilLine,
+} from 'lucide-react';
 import React from 'react';
 
-function Navigation() {
+function Navigation({ isLoggedIn }: { isLoggedIn: boolean }) {
     return (
-        <div className="flex-col-space-y-5 flex">
-            <Button
-                asChild
-                variant="ghost"
-                className="gap-3 rounded-full px-4 py-6 text-lg font-semibold"
-            >
-                <Link href={route('home')}>
-                    <HomeIcon /> Home
-                </Link>
-            </Button>
+        <div className="space-y-2">
+            <div>
+                <Button
+                    asChild
+                    variant="ghost"
+                    className="gap-3 rounded-full px-4 py-6 text-lg font-semibold"
+                >
+                    <Link href={route('home')}>
+                        <HomeIcon /> Home
+                    </Link>
+                </Button>
+            </div>
+
+            {isLoggedIn ? (
+                <CreatePost />
+            ) : (
+                <Button
+                    className="w-full gap-3 rounded-full px-10 py-6 text-lg font-semibold"
+                    asChild
+                >
+                    <Link href={route('login')}>
+                        <PencilLine /> Login to Post
+                    </Link>
+                </Button>
+            )}
         </div>
     );
 }
@@ -52,12 +75,15 @@ export default function BaseLayout({
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="left" content="navigation sidebar">
-                            <Navigation />
+                            <Navigation isLoggedIn={Boolean(auth.user)} />
                         </SheetContent>
                     </Sheet>
-                    <span className="font-satisfy text-xl md:text-3xl">
+                    <Link
+                        href={route('home')}
+                        className="font-satisfy text-xl md:text-3xl"
+                    >
                         Not Instagram
-                    </span>
+                    </Link>
                 </div>
                 <div className="inline-flex grow items-center">
                     <div className="w-1/2 justify-start"></div>
@@ -107,7 +133,7 @@ export default function BaseLayout({
             </div>
             <div className="flex grow overflow-y-auto">
                 <div className="hidden w-72 flex-none p-5 lg:block">
-                    <Navigation />
+                    <Navigation isLoggedIn={Boolean(auth.user)} />
                 </div>
                 <div className="h-full grow overflow-auto">
                     <div className="mx-auto h-full md:w-2/3 lg:w-1/2">
@@ -120,6 +146,7 @@ export default function BaseLayout({
                     </div>
                 </div>
             </div>
+            <Toaster />
         </div>
     );
 }
